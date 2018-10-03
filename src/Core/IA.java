@@ -5,16 +5,16 @@ import java.util.List;
 
 public class IA extends Thread{
 	
-	private List<Coup> meilleurChemin= new ArrayList<Coup>();
+	private Chemin meilleurChemin= new Chemin();
 	private int meilleurScore=(int) Double.POSITIVE_INFINITY;
 	private static int pas;
 	private static int faisceau;
 	private Solitaire solitaire;
 
 	//Constructeur de la classe Core.IA qui clone le solitaire initial et le met en attribut.
-	public IA(Solitaire solitaire){
-		this.solitaire= new Solitaire();
-		this.solitaire.clone(solitaire);
+	public IA(Solitaire solitaire)
+	{
+		this.solitaire= new Solitaire(solitaire);
 	}
 
 	//Methode permettant la mise a jour du meilleur score.
@@ -28,7 +28,7 @@ public class IA extends Thread{
 	}
 
 	//Methode qui permet d'obtenir le meilleur chemin.
-	public List<Coup> getMeilleurChemin(){
+	public Chemin getMeilleurChemin(){
 		return this.meilleurChemin;
 	}
 
@@ -69,8 +69,8 @@ public class IA extends Thread{
 	}
 
 	//Methode qui lance la recherche en profondeur du meilleur chemin.
-	public List<Coup> lancerRecherche(Solitaire solitaire, int pas, int faisceau){
-		List<Coup> chemin=new ArrayList<Coup>();
+	public Chemin lancerRecherche(Solitaire solitaire, int pas, int faisceau){
+		Chemin chemin=new Chemin();
 		IA.pas=pas;
 		IA.faisceau=faisceau;
 		recherche(solitaire, chemin);
@@ -78,7 +78,7 @@ public class IA extends Thread{
 	}
 
 	//Methode qui realise la recherche en profondeur le meilleur chemin.
-	public void recherche(Solitaire solitaire, List<Coup> chemin){ 
+	public void recherche(Solitaire solitaire, Chemin chemin){
 		//On initialise les variables du probleme.
 		List<Coup> coupsPossibles=this.coupsPossibles(solitaire);
 		solitaire.setPoidsCasesPleines();
@@ -120,8 +120,7 @@ public class IA extends Thread{
 			//On met a jour le meilleur score et le meilleur chemin si besoin est.
 			if(solitaire.getScore()<this.meilleurScore){
 				this.setMeilleurScore(solitaire);
-				this.meilleurChemin.clear();
-				this.meilleurChemin=new ArrayList<Coup>(chemin);
+				this.meilleurChemin = new Chemin(chemin);
 			}
 
 			//On appelle a nouveau la recherche (methode de type backtracking).
@@ -139,8 +138,8 @@ public class IA extends Thread{
 	}
 
 	//Methode qui lance la recherche en largeur du meilleur chemin.
-	public List<Coup> lancerRechercheLargeur(int pas, int faisceau){
-		List<Coup> chemin=new ArrayList<Coup>();
+	public Chemin lancerRechercheLargeur(int pas, int faisceau){
+        Chemin chemin=new Chemin();
 		IA.pas=pas;
 		IA.faisceau=faisceau;
 		rechercheLargeur(this.solitaire, chemin);
@@ -148,7 +147,7 @@ public class IA extends Thread{
 	}
 
 	//Methode qui realise la recherche en largeur du meilleur chemin.
-	public void rechercheLargeur(Solitaire solitaire, List<Coup> chemin){
+	public void rechercheLargeur(Solitaire solitaire, Chemin chemin){
 		//On initialise les variables du probleme.
 		List<Coup> coupsPossibles= new ArrayList<Coup>();
 		List<Coup> meilleursCoups= new ArrayList<Coup>();
@@ -212,8 +211,7 @@ public class IA extends Thread{
 		}
 		//On met a jour le meilleurScore et le meilleurChemin.
 		this.setMeilleurScore(solitaire);
-		this.meilleurChemin.clear();
-		this.meilleurChemin=new ArrayList<Coup>(chemin);
+		this.meilleurChemin = new Chemin(chemin);
 		
 		//On rappelle la methode si il reste des coups a jouer.
 		if(this.coupsPossibles(solitaire).size()>0){

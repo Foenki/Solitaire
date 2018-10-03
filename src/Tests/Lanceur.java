@@ -1,3 +1,5 @@
+package Tests;
+
 import Core.Solitaire;
 
 import java.io.IOException;

@@ -1,5 +1,6 @@
 package Visualization2D;
 
+import Core.Chemin;
 import Core.Coup;
 import Core.Solitaire;
 
@@ -15,9 +16,9 @@ public class Visualization2D
         {
             Fenetre fenetre = new Fenetre(solitaire);
 
-            List<Coup> coups = solitaire.solveLargeur(100,10,50);
+            Chemin chemin = solitaire.solveLargeur(100,10,50);
 
-            for(Coup coup : coups)
+            for(Coup coup : chemin.getCoups())
             {
                 Thread.sleep(500);
                 solitaire.jouerCoup(coup);
