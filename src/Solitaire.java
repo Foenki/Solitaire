@@ -253,7 +253,7 @@ public class Solitaire extends JPanel {
 		System.out.println(meilleurScore);
 		FileWriter rapport = new FileWriter("liste_coup.txt", false);
 		for(Coup coup: meilleurChemin){
-			rapport.write((coup.getJPleine())+ " " + (coup.getIPleine()) + " " + coup.getDir() + "\n");
+			rapport.write(coup.toString() + "\n");
 		}
 		rapport.close();
 		Fenetre f=new Fenetre(this);
@@ -291,7 +291,7 @@ public class Solitaire extends JPanel {
 		System.out.println("Fin: " + fin);
 		FileWriter rapport = new FileWriter("liste_coup.txt", false);
 		for(Coup coup: meilleurChemin){
-			rapport.write((coup.getJPleine())+ " " + (coup.getIPleine()) + " " + coup.getDir() + "\n");
+			rapport.write(coup.toString() + "\n");
 		}
 		rapport.close();
 		Fenetre f=new Fenetre(this);
@@ -329,7 +329,7 @@ public class Solitaire extends JPanel {
 		
 		FileWriter rapport = new FileWriter("liste_coup.txt", false);
 		for(Coup coup: meilleurChemin){
-			rapport.write((coup.getJPleine())+ " " + (coup.getIPleine()) + " " + coup.getDir() + "\n");
+			rapport.write(coup.toString() + "\n");
 		}
 		rapport.close();
 		

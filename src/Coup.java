@@ -1,29 +1,63 @@
 public class Coup {
 
-	private int iCaseVide;
-	private int jCaseVide;
+	public enum Direction
+    {
+        UP,
+        RIGHT,
+        LEFT,
+        DOWN
+    };
+
 	private int iCasePleine;
 	private int jCasePleine;
-	private String direction;
+	private Direction direction;
 	private int poidsCoup;
 
 	//Constructeur de coup.
-	public Coup(int iCaseVide, int jCaseVide, int iCasePleine, int jCasePleine, String direction){
-		this.iCaseVide= iCaseVide;
-		this.jCaseVide= jCaseVide;
+	public Coup(int iCasePleine, int jCasePleine, Direction direction){
+
 		this.iCasePleine= iCasePleine;
 		this.jCasePleine= jCasePleine;
-		this.direction= direction;
+		this.direction = direction;
 	}
+
+	public String toString()
+    {
+        return new String(jCasePleine + " " + iCasePleine + " " + this.direction.name());
+    }
 
 	//Methodes liees aux attributs de coup.
 	public int getIVide(){
-		return this.iCaseVide;
+		switch(this.direction){
+            case LEFT:
+            case RIGHT:
+                return this.iCasePleine;
+            case DOWN:
+                return this.iCasePleine + 2;
+            case UP:
+                return this.iCasePleine - 2;
+            default:
+                assert(false);
+                return -1;
+        }
 	}
 
-	public int getJVide(){
-		return this.jCaseVide;
-	}
+	public int getJVide()
+    {
+		switch(this.direction)
+        {
+            case UP:
+            case DOWN:
+                return this.jCasePleine;
+            case LEFT:
+                return this.jCasePleine - 2;
+            case RIGHT:
+                return this.jCasePleine + 2;
+            default:
+                assert (false);
+                return -1;
+        }
+    }
 
 	public int getIPleine(){
 		return this.iCasePleine;
@@ -33,7 +67,7 @@ public class Coup {
 		return this.jCasePleine;
 	}
 
-	public String getDir(){
+	public Direction getDirection(){
 		return this.direction;
 	}
 
@@ -41,10 +75,9 @@ public class Coup {
 	public void setPoidsCoup(Solitaire solitaire){
 
 		int poidsDepart=solitaire.getCases()[this.iCasePleine][this.jCasePleine].getPoidsCase();
-		int poidsInter=solitaire.getCases()[(this.iCaseVide+this.iCasePleine)/2][(this.jCaseVide+this.jCasePleine)/2].getPoidsCase();
-		int poidsArrivee=solitaire.getCases()[this.iCaseVide][this.jCaseVide].getPoidsCase();
+		int poidsInter=solitaire.getCases()[(getIVide()+this.iCasePleine)/2][(getJVide()+this.jCasePleine)/2].getPoidsCase();
+		int poidsArrivee=solitaire.getCases()[this.getIVide()][getJVide()].getPoidsCase();
 		this.poidsCoup=poidsDepart + poidsInter + poidsArrivee;
-		
 	}
 
 	public int getPoidsCoup(){
