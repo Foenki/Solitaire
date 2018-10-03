@@ -52,12 +52,12 @@ public class Solitaire extends JPanel {
 						add(vide);
 					}
 					if(car.equals("0")){
-						this.cases[i][j].setPleine(0);
+						this.cases[i][j].setPleine(false);
 						add(this.cases[i][j]);
 
 					}
 					if(car.equals("1")){
-						this.cases[i][j].setPleine(1);
+						this.cases[i][j].setPleine(true);
 						add(this.cases[i][j]);
 					}
 
@@ -89,7 +89,7 @@ public class Solitaire extends JPanel {
 					this.cases[i][j]=null;
 				}
 				else{
-					this.cases[i][j].setPleine(solitaire.getCases()[i][j].getPleine());
+					this.cases[i][j].setPleine(solitaire.getCases()[i][j].isPleine());
 				}
 			}
 		}
@@ -217,16 +217,16 @@ public class Solitaire extends JPanel {
 
 	//Methode permettant de realiser le coup.
 	public void jouerCoup(Coup coup){
-		this.getCases()[coup.getIVide()][coup.getJVide()].setPleine(1);
-		this.getCases()[(coup.getIVide()+coup.getIPleine())/2][(coup.getJVide()+coup.getJPleine())/2].setPleine(0);
-		this.getCases()[coup.getIPleine()][coup.getJPleine()].setPleine(0);
+		this.getCases()[coup.getIVide()][coup.getJVide()].setPleine(true);
+		this.getCases()[(coup.getIVide()+coup.getIPleine())/2][(coup.getJVide()+coup.getJPleine())/2].setPleine(false);
+		this.getCases()[coup.getIPleine()][coup.getJPleine()].setPleine(false);
 	}
 
 	//Methode permettant de realiser le coup inverse.
 	public void jouerCoupInverse(Coup coup){
-		this.getCases()[coup.getIVide()][coup.getJVide()].setPleine(0);
-		this.getCases()[(coup.getIVide()+coup.getIPleine())/2][(coup.getJVide()+coup.getJPleine())/2].setPleine(1);
-		this.getCases()[coup.getIPleine()][coup.getJPleine()].setPleine(1);
+		this.getCases()[coup.getIVide()][coup.getJVide()].setPleine(false);
+		this.getCases()[(coup.getIVide()+coup.getIPleine())/2][(coup.getJVide()+coup.getJPleine())/2].setPleine(true);
+		this.getCases()[coup.getIPleine()][coup.getJPleine()].setPleine(true);
 	}
 
 	//Methode de resolution en parcours en profondeur multithread.
