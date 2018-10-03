@@ -1,3 +1,5 @@
+package Core;
+
 public class Coup {
 
 	public enum Direction

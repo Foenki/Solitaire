@@ -1,3 +1,5 @@
+package Core;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +11,7 @@ public class IA extends Thread{
 	private static int faisceau;
 	private Solitaire solitaire;
 
-	//Constructeur de la classe IA qui clone le solitaire initial et le met en attribut.
+	//Constructeur de la classe Core.IA qui clone le solitaire initial et le met en attribut.
 	public IA(Solitaire solitaire){
 		this.solitaire= new Solitaire();
 		this.solitaire.clone(solitaire);

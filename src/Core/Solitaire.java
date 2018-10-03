@@ -1,3 +1,5 @@
+package Core;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,11 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import javax.swing.JPanel;
-
-
 @SuppressWarnings("serial")
-public class Solitaire extends JPanel {
+public class Solitaire {
 
 	private Case[][] cases;
 	private int[] dimensions= new int[2];
@@ -37,30 +36,24 @@ public class Solitaire extends JPanel {
 			dimensions[0]= Integer.parseInt(line.split(" ")[0]);
 			dimensions[1]= Integer.parseInt(line.split(" ")[1]);
 			this.cases = new Case[dimensions[0]][dimensions[1]];
-
-			//On remplie le container de cases suivant la disposition GridLayout.
-			setLayout(new GridLayout(dimensions[0], dimensions[1]));
-			int i=0;
-			while((line = br.readLine()) != null){
-				int j=0;
-				for(String car: line.split(" ")){
-					this.cases[i][j]= new Case();
-					if(car.equals("#")){
+			int i = 0;
+			while((line = br.readLine()) != null)
+            {
+				int j = 0;
+				for(String car: line.split(" "))
+				{
+					if(car.equals("#"))
+					{
 						this.cases[i][j]=null;
-						JPanel vide = new JPanel();
-						vide.setOpaque(false);
-						add(vide);
 					}
-					if(car.equals("0")){
-						this.cases[i][j].setPleine(false);
-						add(this.cases[i][j]);
-
+					else if(car.equals("0"))
+					{
+                        this.cases[i][j] = new Case(false);
 					}
-					if(car.equals("1")){
-						this.cases[i][j].setPleine(true);
-						add(this.cases[i][j]);
+					else if(car.equals("1"))
+					{
+                        this.cases[i][j]= new Case(true);
 					}
-
 					j++;
 				}
 				i++;
@@ -83,13 +76,12 @@ public class Solitaire extends JPanel {
 		this.cases=new Case[dimensions[0]][dimensions[1]];
 		for(int i=0; i<this.getDimensions()[0]; i++){
 			for(int j=0; j<this.getDimensions()[1]; j++){
-				this.cases[i][j]= new Case();
-				
+
 				if(solitaire.getCase(i, j)==null){
 					this.cases[i][j]=null;
 				}
 				else{
-					this.cases[i][j].setPleine(solitaire.getCase(i, j).isPleine());
+					this.cases[i][j]= new Case(solitaire.getCase(i, j).isPleine());
 				}
 			}
 		}
@@ -212,12 +204,7 @@ public class Solitaire extends JPanel {
 		return poids;
 	}
 
-	//Methode qui override la methode paint component pour afficher le plateau de solitaire (vide).
-	public void paintComponent(Graphics g){
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(Color.WHITE);
-		g2d.fill3DRect(0, 0, getWidth(), getHeight(), true); 
-	}
+
 
 	//Methode permettant de realiser le coup.
 	public void jouerCoup(Coup coup){
@@ -234,7 +221,7 @@ public class Solitaire extends JPanel {
 	}
 
 	//Methode de resolution en parcours en profondeur multithread.
-	public void solveMulti(int iteration, int pas, int faisceau) throws InterruptedException, IOException{
+	public List<Coup> solveMulti(int iteration, int pas, int faisceau) throws InterruptedException, IOException{
 		List<Coup> meilleurChemin= new ArrayList<Coup>();
 		List<IA> ias= new ArrayList<IA>();
 		int meilleurScore= (int) Double.POSITIVE_INFINITY;
@@ -260,19 +247,12 @@ public class Solitaire extends JPanel {
 			rapport.write(coup.toString() + "\n");
 		}
 		rapport.close();
-		Fenetre f=new Fenetre(this);
-		for(Coup coup: meilleurChemin){
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e1) {
-			}
-			this.jouerCoup(coup);
-			f.repaint();
-		}
+
+		return meilleurChemin;
 	}
 
 	//Methode de resolution par parcours en profondeur.
-	public void solveProfondeur(int iteration, int pas, int faisceau) throws InterruptedException, IOException{
+	public List<Coup> solveProfondeur(int iteration, int pas, int faisceau) throws InterruptedException, IOException{
 		Date debut= new Date();
 		System.out.println("Debut: " + debut);
 		List<Coup> meilleurChemin= new ArrayList<Coup>();
@@ -283,7 +263,7 @@ public class Solitaire extends JPanel {
 		for(int i=0; i<iteration; i++){
 			IA ia=new IA(this);
 			chemin=ia.lancerRecherche(this, pas, faisceau);
-			System.out.println("Score de l'IA: " + ia.getMeilleurScore());
+			System.out.println("Score de l'Core.IA: " + ia.getMeilleurScore());
 			if(ia.getMeilleurScore()<meilleurScore){
 				meilleurChemin=chemin;
 				meilleurScore=ia.getMeilleurScore();
@@ -298,19 +278,12 @@ public class Solitaire extends JPanel {
 			rapport.write(coup.toString() + "\n");
 		}
 		rapport.close();
-		Fenetre f=new Fenetre(this);
-		for(Coup coup: meilleurChemin){
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e1) {
-			}
-			this.jouerCoup(coup);
-			f.repaint();
-		}
+
+		return meilleurChemin;
 	}
 
 	//Methode de resolution par parcours en largeur.
-	public void solveLargeur(int iteration, int pas, int faisceau) throws InterruptedException, IOException{
+	public List<Coup> solveLargeur(int iteration, int pas, int faisceau) throws InterruptedException, IOException{
 		Date debut= new Date();
 		System.out.println("Debut: " + debut);
 		List<Coup> meilleurChemin= new ArrayList<Coup>();
@@ -336,16 +309,8 @@ public class Solitaire extends JPanel {
 			rapport.write(coup.toString() + "\n");
 		}
 		rapport.close();
-		
-		Fenetre f=new Fenetre(this);
-		for(Coup coup: meilleurChemin){
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e1) {
-			}
-			this.jouerCoup(coup);
-			f.repaint();
-		}
+
+		return meilleurChemin;
 	}
 }
 
