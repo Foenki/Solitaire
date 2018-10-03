@@ -43,20 +43,20 @@ public class IA extends Thread{
 		List<Coup> coups= new ArrayList<Coup>();
 		for(int i=0; i<solitaire.getDimensions()[0]; i++){
 			for(int j=0; j<solitaire.getDimensions()[1]; j++){
-				if(solitaire.getCases()[i][j]!=null && !solitaire.getCases()[i][j].isPleine()){
-					if(i+2<solitaire.getDimensions()[0] && solitaire.getCases()[i+1][j]!=null && solitaire.getCases()[i+1][j].isPleine() && solitaire.getCases()[i+2][j]!=null && solitaire.getCases()[i+2][j].isPleine()){
+				if(solitaire.getCase(i, j)!=null && !solitaire.getCase(i, j).isPleine()){
+					if(i+2<solitaire.getDimensions()[0] && solitaire.getCase(i+1, j)!=null && solitaire.getCase(i+1, j).isPleine() && solitaire.getCase(i+2, j)!=null && solitaire.getCase(i+2, j).isPleine()){
 						Coup coup=new Coup(i+2,j, Coup.Direction.UP);
 						coups.add(coup);
 					}
-					if(i-2>=0 && solitaire.getCases()[i-1][j]!=null && solitaire.getCases()[i-1][j].isPleine() && solitaire.getCases()[i-2][j]!=null && solitaire.getCases()[i-2][j].isPleine()){
+					if(i-2>=0 && solitaire.getCase(i-1, j)!=null && solitaire.getCase(i-1, j).isPleine() && solitaire.getCase(i-2, j)!=null && solitaire.getCase(i-2, j).isPleine()){
 						Coup coup=new Coup(i-2,j,Coup.Direction.DOWN);
 						coups.add(coup);
 					}
-					if(j+2<solitaire.getDimensions()[1] && solitaire.getCases()[i][j+1]!=null && solitaire.getCases()[i][j+1].isPleine() && solitaire.getCases()[i][j+2]!=null && solitaire.getCases()[i][j+2].isPleine()){
+					if(j+2<solitaire.getDimensions()[1] && solitaire.getCase(i, j+1)!=null && solitaire.getCase(i, j+1).isPleine() && solitaire.getCase(i, j+2)!=null && solitaire.getCase(i, j+2).isPleine()){
 						Coup coup= new Coup(i,j+2,Coup.Direction.LEFT);
 						coups.add(coup);
 					}
-					if(j-2>=0 && solitaire.getCases()[i][j-1]!=null && solitaire.getCases()[i][j-1].isPleine() && solitaire.getCases()[i][j-2]!=null && solitaire.getCases()[i][j-2].isPleine()){
+					if(j-2>=0 && solitaire.getCase(i, j-1)!=null && solitaire.getCase(i, j-1).isPleine() && solitaire.getCase(i, j-2)!=null && solitaire.getCase(i, j-2).isPleine()){
 						Coup coup=new Coup(i,j-2, Coup.Direction.RIGHT);
 						coups.add(coup);
 					}

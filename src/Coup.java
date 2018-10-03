@@ -74,9 +74,9 @@ public class Coup {
 	//Methode qui calcule et attribut le poids a un coup.
 	public void setPoidsCoup(Solitaire solitaire){
 
-		int poidsDepart=solitaire.getCases()[this.iCasePleine][this.jCasePleine].getPoidsCase();
-		int poidsInter=solitaire.getCases()[(getIVide()+this.iCasePleine)/2][(getJVide()+this.jCasePleine)/2].getPoidsCase();
-		int poidsArrivee=solitaire.getCases()[this.getIVide()][getJVide()].getPoidsCase();
+		int poidsDepart=solitaire.getCase(this.iCasePleine, this.jCasePleine).getPoidsCase();
+		int poidsInter=solitaire.getCase((getIVide()+this.iCasePleine)/2, (getJVide()+this.jCasePleine)/2).getPoidsCase();
+		int poidsArrivee=solitaire.getCase(this.getIVide(), getJVide()).getPoidsCase();
 		this.poidsCoup=poidsDepart + poidsInter + poidsArrivee;
 	}
 

@@ -85,11 +85,11 @@ public class Solitaire extends JPanel {
 			for(int j=0; j<this.getDimensions()[1]; j++){
 				this.cases[i][j]= new Case();
 				
-				if(solitaire.getCases()[i][j]==null){
+				if(solitaire.getCase(i, j)==null){
 					this.cases[i][j]=null;
 				}
 				else{
-					this.cases[i][j].setPleine(solitaire.getCases()[i][j].isPleine());
+					this.cases[i][j].setPleine(solitaire.getCase(i, j).isPleine());
 				}
 			}
 		}
@@ -100,47 +100,47 @@ public class Solitaire extends JPanel {
 	public void setPoidsCasesPleines(){
 		for(int i=0; i<this.getDimensions()[0]; i++){
 			for(int j=0; j<this.getDimensions()[1]; j++){
-				if(this.getCases()[i][j]!=null && this.getCases()[i][j].isPleine()){
+				if(this.getCase(i, j)!=null && this.getCase(i, j).isPleine()){
 					int poids=2;
-					if((i-1 >= 0 && (this.getCases()[i-1][j]==null || !this.getCases()[i-1][j].isPleine())) || i-1 < 0){
+					if((i-1 >= 0 && (this.getCase(i-1, j)==null || !this.getCase(i-1, j).isPleine())) || i-1 < 0){
 						poids=poids+2;
-						if((i-1 >= 0 && this.getCases()[i-1][j]==null) || i-1 < 0){
+						if((i-1 >= 0 && this.getCase(i-1, j)==null) || i-1 < 0){
 							poids= poids +2;
 						}
 					}
-					if((j-1 >= 0 && (this.getCases()[i][j-1]==null || !this.getCases()[i][j-1].isPleine())) || j-1 < 0){
+					if((j-1 >= 0 && (this.getCase(i, j-1)==null || !this.getCase(i, j-1).isPleine())) || j-1 < 0){
 						poids=poids+2;
-						if((j-1 >= 0 && this.getCases()[i][j-1]==null) || j-1 < 0){
+						if((j-1 >= 0 && this.getCase(i, j-1)==null) || j-1 < 0){
 							poids=poids+2;
 						}
 					}
-					if((i+1 < this.getDimensions()[0] && (this.getCases()[i+1][j]==null || !this.getCases()[i+1][j].isPleine())) || i+1>=this.getDimensions()[0]){
+					if((i+1 < this.getDimensions()[0] && (this.getCase(i+1, j)==null || !this.getCase(i+1, j).isPleine())) || i+1>=this.getDimensions()[0]){
 						poids=poids+2;
-						if((i+1 < this.getDimensions()[0] && this.getCases()[i+1][j]==null) || i+1>=this.getDimensions()[0]){
+						if((i+1 < this.getDimensions()[0] && this.getCase(i+1, j)==null) || i+1>=this.getDimensions()[0]){
 							poids=poids+2;
 						}
 					}
-					if((j+1 < this.getDimensions()[1] && (this.getCases()[i][j+1]==null || !this.getCases()[i][j+1].isPleine())) || j+1>=this.getDimensions()[1]){
+					if((j+1 < this.getDimensions()[1] && (this.getCase(i, j+1)==null || !this.getCase(i, j+1).isPleine())) || j+1>=this.getDimensions()[1]){
 						poids=poids+2;
-						if((j+1 < this.getDimensions()[1] && this.getCases()[i][j+1]==null) || j+1>=this.getDimensions()[1]){
+						if((j+1 < this.getDimensions()[1] && this.getCase(i, j+1)==null) || j+1>=this.getDimensions()[1]){
 							poids=poids+2;
 						}
 					}
-					if(((i-1 >= 0 && (this.getCases()[i-1][j]==null || !this.getCases()[i-1][j].isPleine())) || i-1 < 0)
-				    && ((j-1 >= 0 && (this.getCases()[i][j-1]==null || !this.getCases()[i][j-1].isPleine())) || j-1 < 0)
-				    && ((j+1 < this.getDimensions()[1] && (this.getCases()[i][j+1]==null || !this.getCases()[i][j+1].isPleine())) || j+1>=this.getDimensions()[1])
-				    && ((i+1 < this.getDimensions()[0] && (this.getCases()[i+1][j]==null || !this.getCases()[i+1][j].isPleine())) || i+1>=this.getDimensions()[0])
-				    && (((i-1 >= 0 && j-1 >= 0) && (this.getCases()[i-1][j-1]==null || !this.getCases()[i-1][j-1].isPleine())) || (i-1 < 0 && j-1 < 0))
-				    && (((i-1 >= 0 && j+1 < this.getDimensions()[1]) && (this.getCases()[i-1][j+1]==null || !this.getCases()[i-1][j+1].isPleine())) || (i-1 < 0 && j+1 >= this.getDimensions()[1]))
-				    && (((j-1 >= 0 && i+1 < this.getDimensions()[0]) && (this.getCases()[i+1][j-1]==null || !this.getCases()[i+1][j-1].isPleine())) || (j-1 < 0 && i+1 >= this.getDimensions()[0]))
-				    && (((i+1 < this.getDimensions()[0] && j+1 < this.getDimensions()[1]) && (this.getCases()[i+1][j+1]==null || !this.getCases()[i+1][j+1].isPleine())) || (i+1 >= this.getDimensions()[0] && j+1 >= this.getDimensions()[1]))
-					&& ((i-2 >= 0 && (this.getCases()[i-2][j]==null || !this.getCases()[i-2][j].isPleine())) || i-2 < 0)
-					&& ((j-2 >= 0 && (this.getCases()[i][j-2]==null || this.getCases()[i][j-2].isPleine())) || j-2 < 0)
-					&& ((j+2 < this.getDimensions()[1] && (this.getCases()[i][j+2]==null || !this.getCases()[i][j+2].isPleine())) || j+2>=this.getDimensions()[1])
-					&& ((i+2 < this.getDimensions()[0] && (this.getCases()[i+2][j]==null || !this.getCases()[i+2][j].isPleine())) || i+2>=this.getDimensions()[0])){
+					if(((i-1 >= 0 && (this.getCase(i-1, j)==null || !this.getCase(i-1, j).isPleine())) || i-1 < 0)
+				    && ((j-1 >= 0 && (this.getCase(i, j-1)==null || !this.getCase(i, j-1).isPleine())) || j-1 < 0)
+				    && ((j+1 < this.getDimensions()[1] && (this.getCase(i, j+1)==null || !this.getCase(i, j+1).isPleine())) || j+1>=this.getDimensions()[1])
+				    && ((i+1 < this.getDimensions()[0] && (this.getCase(i+1, j)==null || !this.getCase(i+1, j).isPleine())) || i+1>=this.getDimensions()[0])
+				    && (((i-1 >= 0 && j-1 >= 0) && (this.getCase(i-1, j-1)==null || !this.getCase(i-1, j-1).isPleine())) || (i-1 < 0 && j-1 < 0))
+				    && (((i-1 >= 0 && j+1 < this.getDimensions()[1]) && (this.getCase(i-1, j+1)==null || !this.getCase(i-1, j+1).isPleine())) || (i-1 < 0 && j+1 >= this.getDimensions()[1]))
+				    && (((j-1 >= 0 && i+1 < this.getDimensions()[0]) && (this.getCase(i+1, j-1)==null || !this.getCase(i+1, j-1).isPleine())) || (j-1 < 0 && i+1 >= this.getDimensions()[0]))
+				    && (((i+1 < this.getDimensions()[0] && j+1 < this.getDimensions()[1]) && (this.getCase(i+1, j+1)==null || !this.getCase(i+1, j+1).isPleine())) || (i+1 >= this.getDimensions()[0] && j+1 >= this.getDimensions()[1]))
+					&& ((i-2 >= 0 && (this.getCase(i-2, j)==null || !this.getCase(i-2, j).isPleine())) || i-2 < 0)
+					&& ((j-2 >= 0 && (this.getCase(i, j-2)==null || this.getCase(i, j-2).isPleine())) || j-2 < 0)
+					&& ((j+2 < this.getDimensions()[1] && (this.getCase(i, j+2)==null || !this.getCase(i, j+2).isPleine())) || j+2>=this.getDimensions()[1])
+					&& ((i+2 < this.getDimensions()[0] && (this.getCase(i+2, j)==null || !this.getCase(i+2, j).isPleine())) || i+2>=this.getDimensions()[0])){
 						poids=poids + 4;
 					}
-					this.getCases()[i][j].setPoidsCase(poids);
+					this.getCase(i, j).setPoidsCase(poids);
 				}
 			}
 		}
@@ -150,21 +150,21 @@ public class Solitaire extends JPanel {
 	public void setPoidsCasesVides(){
 		for(int i=0; i<this.getDimensions()[0]; i++){
 			for(int j=0; j<this.getDimensions()[1]; j++){
-				if(this.getCases()[i][j]!=null && !this.getCases()[i][j].isPleine()){
+				if(this.getCase(i, j)!=null && !this.getCase(i, j).isPleine()){
 					int poids=2;
-					if(i-1 >= 0 && this.getCases()[i-1][j]!=null && this.getCases()[i-1][j].isPleine()){
-						poids=poids + this.getCases()[i-1][j].getPoidsCase();
+					if(i-1 >= 0 && this.getCase(i-1, j)!=null && this.getCase(i-1, j).isPleine()){
+						poids=poids + this.getCase(i-1, j).getPoidsCase();
 					}
-					if(j-1 >= 0 && this.getCases()[i][j-1]!=null && this.getCases()[i][j-1].isPleine()){
-						poids=poids + this.getCases()[i][j-1].getPoidsCase();
+					if(j-1 >= 0 && this.getCase(i, j-1)!=null && this.getCase(i, j-1).isPleine()){
+						poids=poids + this.getCase(i, j-1).getPoidsCase();
 					}
-					if(i+1 < this.getDimensions()[0] && this.getCases()[i+1][j]!=null && this.getCases()[i+1][j].isPleine()){
-						poids=poids + this.getCases()[i+1][j].getPoidsCase();
+					if(i+1 < this.getDimensions()[0] && this.getCase(i+1, j)!=null && this.getCase(i+1, j).isPleine()){
+						poids=poids + this.getCase(i+1, j).getPoidsCase();
 					}
-					if(j+1 < this.getDimensions()[1] && this.getCases()[i][j+1]!=null && this.getCases()[i][j+1].isPleine()){
-						poids=poids + this.getCases()[i][j+1].getPoidsCase();
+					if(j+1 < this.getDimensions()[1] && this.getCase(i, j+1)!=null && this.getCase(i, j+1).isPleine()){
+						poids=poids + this.getCase(i, j+1).getPoidsCase();
 					}
-					this.getCases()[i][j].setPoidsCase(poids);
+					this.getCase(i, j).setPoidsCase(poids);
 				}
 			}
 		}
@@ -179,6 +179,10 @@ public class Solitaire extends JPanel {
 		return this.cases;
 	}
 
+    public Case getCase(int i, int j){
+        return this.cases[i][j];
+    }
+
 	public Semaphore getSemaphore(){
 		return this.sem;
 	}
@@ -188,7 +192,7 @@ public class Solitaire extends JPanel {
 		int score=0;
 		for(int i=0; i<this.getDimensions()[0]; i++){
 			for(int j=0; j<this.getDimensions()[1]; j++){
-				if(this.getCases()[i][j]!=null && this.getCases()[i][j].isPleine()){
+				if(this.getCase(i, j)!=null && this.getCase(i, j).isPleine()){
 					score++;
 				}
 			}
@@ -200,8 +204,8 @@ public class Solitaire extends JPanel {
 		int poids=0;
 		for(int i=0; i<this.getDimensions()[0]; i++){
 			for(int j=0; j<this.getDimensions()[1]; j++){
-				if(this.getCases()[i][j]!=null){
-					poids= poids+ this.getCases()[i][j].getPoidsCase();
+				if(this.getCase(i, j)!=null){
+					poids= poids+ this.getCase(i, j).getPoidsCase();
 				}
 			}
 		}
@@ -217,16 +221,16 @@ public class Solitaire extends JPanel {
 
 	//Methode permettant de realiser le coup.
 	public void jouerCoup(Coup coup){
-		this.getCases()[coup.getIVide()][coup.getJVide()].setPleine(true);
-		this.getCases()[(coup.getIVide()+coup.getIPleine())/2][(coup.getJVide()+coup.getJPleine())/2].setPleine(false);
-		this.getCases()[coup.getIPleine()][coup.getJPleine()].setPleine(false);
+		this.getCase(coup.getIVide(), coup.getJVide()).setPleine(true);
+		this.getCase((coup.getIVide()+coup.getIPleine())/2, (coup.getJVide()+coup.getJPleine())/2).setPleine(false);
+		this.getCase(coup.getIPleine(), coup.getJPleine()).setPleine(false);
 	}
 
 	//Methode permettant de realiser le coup inverse.
 	public void jouerCoupInverse(Coup coup){
-		this.getCases()[coup.getIVide()][coup.getJVide()].setPleine(false);
-		this.getCases()[(coup.getIVide()+coup.getIPleine())/2][(coup.getJVide()+coup.getJPleine())/2].setPleine(true);
-		this.getCases()[coup.getIPleine()][coup.getJPleine()].setPleine(true);
+		this.getCase(coup.getIVide(), coup.getJVide()).setPleine(false);
+		this.getCase((coup.getIVide()+coup.getIPleine())/2, (coup.getJVide()+coup.getJPleine())/2).setPleine(true);
+		this.getCase(coup.getIPleine(), coup.getJPleine()).setPleine(true);
 	}
 
 	//Methode de resolution en parcours en profondeur multithread.
