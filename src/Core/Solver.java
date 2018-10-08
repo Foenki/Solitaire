@@ -1,7 +1,6 @@
 package Core;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public abstract class Solver
@@ -16,6 +15,8 @@ public abstract class Solver
 
         return doSolve(solitaire);
     }
+
+    public abstract Solver clone();
 
     //Methode qui determine les coups possibles suivant les regles du solitaire.
     public List<Coup> getCoupsPossibles(Solitaire solitaire){

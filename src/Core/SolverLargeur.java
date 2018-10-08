@@ -14,6 +14,11 @@ public class SolverLargeur extends Solver
         this.dimFaisceau = dimFaisceau;
     }
 
+    public Solver clone()
+    {
+        return new SolverLargeur(pas, dimFaisceau);
+    }
+
     protected Chemin doSolve(Solitaire solitaire)
     {
         Chemin chemin = new Chemin();

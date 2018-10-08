@@ -2,8 +2,6 @@ package Visualization2D;
 
 import Core.*;
 
-import java.io.IOException;
-
 public class Visualization2D
 {
     public static void main(String[] args)
@@ -14,8 +12,10 @@ public class Visualization2D
             Fenetre fenetre = new Fenetre(solitaire);
 
             SolverLargeur solverLargeur = new SolverLargeur(10, 50);
-            SolverIterations solver = new SolverIterations(solverLargeur, 100);
-            Chemin chemin = solver.solve(solitaire);
+            SolverIterations solver = new SolverIterations(solverLargeur, 1);
+            SolverConcurrent solverConcurrent = new SolverConcurrent(solver, 3);
+            Chemin chemin = solverConcurrent.solve(solitaire);
+
             for(Coup coup : chemin.getCoups())
             {
                 Thread.sleep(500);

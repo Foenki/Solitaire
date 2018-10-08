@@ -2,20 +2,13 @@ package Core;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Semaphore;
 
 @SuppressWarnings("serial")
 public class Solitaire
 {
 	private Case[][] cases;
 	private int[] dimensions= new int[2];
-	private Semaphore sem;
 
     private final static char NO_CASE_SYMBOL = '#';
     private final static char EMPTY_CASE_SYMBOL = '0';
@@ -82,7 +75,6 @@ public class Solitaire
 				}
 			}
 		}
-		this.sem=solitaire.sem;
 	}
 
 	//Methode qui attribut un poids a chaque case pleine du solitaire selon l'etat des cases adjacentes.
@@ -171,10 +163,6 @@ public class Solitaire
     public Case getCase(int i, int j){
         return this.cases[i][j];
     }
-
-	public Semaphore getSemaphore(){
-		return this.sem;
-	}
 
 	//Methode qui calcule le score du solitaire courant en comptant le nombre de cases pleines.
 	public int getScore(){

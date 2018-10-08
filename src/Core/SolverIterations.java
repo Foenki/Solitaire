@@ -11,19 +11,21 @@ public class SolverIterations extends Solver
         this.iterations = iterations;
     }
 
+    public Solver clone()
+    {
+        return new SolverIterations(solver.clone(), iterations);
+    }
+
     protected Chemin doSolve(Solitaire solitaire)
     {
-        int bestScore = Integer.MAX_VALUE;
-
         for(int i = 0; i < iterations; ++i)
         {
             Chemin currentChemin = solver.solve(solitaire);
 
-            if(solver.getMeilleurScore() < bestScore)
+            if(solver.getMeilleurScore() < getMeilleurScore())
             {
-                bestScore = solver.getMeilleurScore();
                 setMeilleurChemin(currentChemin);
-                setMeilleurScore(bestScore);
+                setMeilleurScore(solver.getMeilleurScore());
             }
         }
 
