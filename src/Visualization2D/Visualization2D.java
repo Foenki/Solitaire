@@ -1,11 +1,8 @@
 package Visualization2D;
 
-import Core.Chemin;
-import Core.Coup;
-import Core.Solitaire;
+import Core.*;
 
 import java.io.IOException;
-import java.util.List;
 
 public class Visualization2D
 {
@@ -16,8 +13,9 @@ public class Visualization2D
         {
             Fenetre fenetre = new Fenetre(solitaire);
 
-            Chemin chemin = solitaire.solveLargeur(100,10,50);
-
+            SolverLargeur solverLargeur = new SolverLargeur(10, 50);
+            SolverIterations solver = new SolverIterations(solverLargeur, 100);
+            Chemin chemin = solver.solve(solitaire);
             for(Coup coup : chemin.getCoups())
             {
                 Thread.sleep(500);
@@ -30,11 +28,6 @@ public class Visualization2D
         {
             e.printStackTrace();
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
 
     }
 }

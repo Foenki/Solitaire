@@ -1,5 +1,7 @@
 package Core;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,22 @@ public class Chemin
             s += c.toString() + '\n';
         }
         return s;
+    }
+
+    public void writeToFile(String fileName)
+    {
+        FileWriter rapport = null;
+        try
+        {
+            rapport = new FileWriter(fileName, false);
+            rapport.write(toString());
+            rapport.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public int size()

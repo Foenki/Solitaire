@@ -1,6 +1,8 @@
 package Tests;
 
 import Core.Solitaire;
+import Core.SolverIterations;
+import Core.SolverLargeur;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -26,9 +28,10 @@ public class Lanceur {
 		int faisceau= UserInput.nextInt();
 		UserInput.close();
 		Solitaire s= new Solitaire(nom);
-		s.solveLargeur(iteration ,pas, faisceau);
-		//s.solveMulti(iteration, pas, faisceau);
-		//s.solveProfondeur(iteration, pas, faisceau);
+
+		SolverLargeur solverLargeur = new SolverLargeur(pas, faisceau);
+		SolverIterations solver = new SolverIterations(solverLargeur, iteration);
+		solver.solve(s);
 	}
 	
 }
