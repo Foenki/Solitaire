@@ -192,7 +192,8 @@ public class Solitaire
 
 
 	//Methode permettant de realiser le coup.
-	public void jouerCoup(Coup coup){
+	public void jouerCoup(Coup coup)
+    {
 		getCase(coup.getIVide(), coup.getJVide()).setPleine(true);
 		getCase((coup.getIVide()+coup.getIPleine())/2, (coup.getJVide()+coup.getJPleine())/2).setPleine(false);
 		getCase(coup.getIPleine(), coup.getJPleine()).setPleine(false);
