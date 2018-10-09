@@ -1,7 +1,6 @@
 package Core;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Semaphore;
 
 public class SolverConcurrent extends Solver
@@ -9,12 +8,14 @@ public class SolverConcurrent extends Solver
     private Solver solver;
     private int maxNbThreads;
     private Semaphore semaphore;
+    private ArrayList<Solver> solvers;
 
     public SolverConcurrent(Solver solver, int maxNbThreads)
     {
         this.solver = solver;
         this.maxNbThreads = maxNbThreads;
         this.semaphore = new Semaphore(1);
+        this.solvers = new ArrayList<Solver>();
     }
 
     public Solver clone()
@@ -22,12 +23,24 @@ public class SolverConcurrent extends Solver
         return new SolverConcurrent(solver.clone(), maxNbThreads);
     }
 
+    public double completion()
+    {
+        double result = 0;
+        for(int i = 0; i < solvers.size(); ++i)
+        {
+            result += solvers.get(i).completion();
+        }
+        return result / (double)maxNbThreads;
+    }
+
     protected Chemin doSolve(Solitaire solitaire)
     {
         ArrayList< Thread > threads = new ArrayList<Thread>();
         for(int i = 0; i < maxNbThreads; ++i)
         {
-            Thread t = new Thread(new RunnableSolve(solver.clone(), solitaire));
+            Solver s = solver.clone();
+            solvers.add(s);
+            Thread t = new Thread(new RunnableSolve(s, solitaire));
             t.start();
             threads.add(t);
         }

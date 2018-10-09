@@ -8,10 +8,15 @@ public class SolverLargeur extends Solver
     private int pas;
     private int dimFaisceau;
 
+    private int currentIter;
+    private int maxIter;
+
     public SolverLargeur(int pas, int dimFaisceau)
     {
         this.pas = pas;
         this.dimFaisceau = dimFaisceau;
+        this.currentIter = 0;
+        this.maxIter = Integer.MAX_VALUE;
     }
 
     public Solver clone()
@@ -24,9 +29,20 @@ public class SolverLargeur extends Solver
         Chemin chemin = new Chemin();
         Solitaire clone = new Solitaire(solitaire);
 
-        doSolveRecursive(clone, chemin);
+        maxIter = 1 + clone.getScore() / pas;
+        currentIter = 0;
+        while(getCoupsPossibles(clone).size() > 0)
+        {
+            doSolveRecursive(clone, chemin);
+            currentIter++;
+        }
 
         return chemin;
+    }
+
+    public double completion()
+    {
+        return (double)currentIter / (double)maxIter;
     }
 
     private void doSolveRecursive(Solitaire solitaire, Chemin chemin)
@@ -95,10 +111,5 @@ public class SolverLargeur extends Solver
         //On met a jour le meilleurScore et le meilleurChemin.
         setMeilleurScore(solitaire.getScore());
         setMeilleurChemin(new Chemin(chemin));
-
-        //On rappelle la methode si il reste des coups a jouer.
-        if(getCoupsPossibles(solitaire).size()>0){
-            doSolveRecursive(solitaire, chemin);
-        }
     }
 }

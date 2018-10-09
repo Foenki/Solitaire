@@ -2,6 +2,7 @@ package Core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 public abstract class Solver
 {
@@ -66,5 +67,6 @@ public abstract class Solver
         meilleurScore = score;
     }
 
+    public abstract double completion();
     protected abstract Chemin doSolve(Solitaire solitaire);
 }
