@@ -14,10 +14,9 @@ public class Visualization2D
         {
             Fenetre fenetre = new Fenetre(solitaire);
 
-            SolverMonteCarlo solverMC = new SolverMonteCarlo(200);
-            SolverLargeur solverLargeur = new SolverLargeur(20, 50);
-            SolverIterations solverIt = new SolverIterations(solverLargeur, 5);
-            SolverConcurrent solverConcurrent = new SolverConcurrent(solverIt, 8);
+            Solver solver = new SolverMonteCarlo(50);
+            SolverIterations solverIt = new SolverIterations(solver, 5);
+            SolverConcurrent solverConcurrent = new SolverConcurrent(solverIt, 2);
             ProgressObserver.launch(solverConcurrent);
             Chemin chemin = solverConcurrent.solve(solitaire);
 

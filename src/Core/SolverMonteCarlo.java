@@ -9,11 +9,15 @@ public class SolverMonteCarlo extends Solver
 {
     private int currentIteration;
     private int iterations;
+    private int scoreInitial;
+
+    private static final double UCT_CONSTANT = Math.sqrt(2);
 
     public SolverMonteCarlo(int iterations)
     {
         this.currentIteration = 0;
         this.iterations = iterations;
+        this.scoreInitial = 0;
     }
 
     public Solver clone()
@@ -28,6 +32,7 @@ public class SolverMonteCarlo extends Solver
 
     public Chemin doSolve(Solitaire solitaire)
     {
+        this.scoreInitial = solitaire.getScore();
         SolitaireState root = new SolitaireState();
 
         Solitaire clone = new Solitaire(solitaire);
@@ -61,15 +66,31 @@ public class SolverMonteCarlo extends Solver
 
     private void runSimulationFromState(Solitaire solitaire, SolitaireState state)
     {
-        int scoreInitial = solitaire.getScore();
         Chemin cheminAleatoire = new Chemin();
         List< Coup > coupsPossibles = getCoupsPossibles(solitaire);
 
         while(coupsPossibles.size() > 0)
         {
-            Coup coup = coupsPossibles.get((int)(Math.random() * coupsPossibles.size()));
-            cheminAleatoire.add(coup);
-            solitaire.jouerCoup(coup);
+            solitaire.setPoidsCasesPleines();
+            solitaire.setPoidsCasesVides();
+            double  poidsTotal=0;
+            for(Coup coup: coupsPossibles){
+                coup.setPoidsCoup(solitaire);
+                poidsTotal=poidsTotal + Math.exp(coup.getPoidsCoup());
+            }
+            double rand= Math.random();
+            double poidsCourant=0;
+            int j = 0;
+            while(j<coupsPossibles.size()){
+                poidsCourant=poidsCourant+ Math.exp(coupsPossibles.get(j).getPoidsCoup());
+                if(rand <= poidsCourant/poidsTotal){
+                    solitaire.jouerCoup(coupsPossibles.get(j));
+                    cheminAleatoire.add(coupsPossibles.get(j));
+                    break;
+                }
+                j++;
+            }
+
             coupsPossibles = getCoupsPossibles(solitaire);
         }
 
@@ -96,10 +117,11 @@ public class SolverMonteCarlo extends Solver
             SolitaireState currentBest = null;
             for(SolitaireState childState : currentState.getNextStates())
             {
-                double averageScore = childState.averageScore();
-                if(averageScore > currentMax)
+                double score = childState.averageScore() / scoreInitial;
+                score += UCT_CONSTANT * Math.sqrt(Math.log((double)currentState.nbScores / (double)childState.nbScores));
+                if(score > currentMax)
                 {
-                    currentMax = averageScore;
+                    currentMax = score;
                     currentBest = childState;
                 }
             }
