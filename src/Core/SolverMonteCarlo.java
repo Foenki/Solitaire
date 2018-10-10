@@ -31,18 +31,15 @@ public class SolverMonteCarlo extends Solver
         StateGraph graph = new StateGraph();
         for(currentIteration = 0; currentIteration < iterations; ++currentIteration)
         {
-            SolitaireState stateToExpand = new SolitaireState();
-            Chemin cheminToState = new Chemin();
-
-            graph.chooseNodeToExpand(stateToExpand, cheminToState);
+            StateChemin stateChemin = graph.chooseNodeToExpand();
 
             Solitaire clone = new Solitaire(solitaire);
-            clone.jouerChemin(cheminToState);
+            clone.jouerChemin(stateChemin.chemin);
             List< Coup > coupsPossibles = getCoupsPossibles(clone);
 
             Coup coupToChild = coupsPossibles.get((int)(Math.random() * coupsPossibles.size()));
             SolitaireState newChild = new SolitaireState();
-            stateToExpand.addEdge(new GraphEdge(coupToChild, newChild));
+            stateChemin.state.addEdge(new GraphEdge(coupToChild, newChild));
 
             clone.jouerCoup(coupToChild);
             Chemin cheminAleatoire = jouerCheminAleatoire(clone);
@@ -52,9 +49,11 @@ public class SolverMonteCarlo extends Solver
             if(clone.getScore() < getMeilleurScore())
             {
                 setMeilleurScore(clone.getScore());
-                cheminToState.add(coupToChild);
-                cheminToState.add(cheminAleatoire);
-                setMeilleurChemin(cheminToState);
+                Chemin meilleurChemin = new Chemin();
+                meilleurChemin.add(stateChemin.chemin);
+                meilleurChemin.add(coupToChild);
+                meilleurChemin.add(cheminAleatoire);
+                setMeilleurChemin(meilleurChemin);
             }
 
         }
@@ -150,6 +149,17 @@ public class SolverMonteCarlo extends Solver
         }
     }
 
+    private class StateChemin
+    {
+        public SolitaireState state;
+        public Chemin chemin;
+
+        public StateChemin(SolitaireState state, Chemin chemin) {
+            this.state = state;
+            this.chemin = chemin;
+        }
+    }
+
     private class StateGraph
     {
         public SolitaireState root;
@@ -159,9 +169,17 @@ public class SolverMonteCarlo extends Solver
             this.root = new SolitaireState();
         }
 
-        public void chooseNodeToExpand(SolitaireState stateToExpand, Chemin cheminToState)
+        public StateChemin chooseNodeToExpand()
         {
-            stateToExpand = root;
+            SolitaireState currentState = root;
+            Chemin chemin = new Chemin();
+            while(!currentState.isLeaf())
+            {
+                chemin.add(currentState.edges.get(0).coup);
+                currentState = currentState.getNextStates().get(0);
+            }
+
+            return new StateChemin(currentState, chemin);
         }
     }
 
