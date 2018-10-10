@@ -189,14 +189,26 @@ public class Solitaire
 		return poids;
 	}
 
-
+    public boolean canPlayCoup(Coup coup)
+    {
+        return !getCase(coup.getIVide(), coup.getJVide()).isPleine() &&
+        getCase((coup.getIVide()+coup.getIPleine())/2, (coup.getJVide()+coup.getJPleine())/2).isPleine() &&
+        getCase(coup.getIPleine(), coup.getJPleine()).isPleine();
+    }
 
 	//Methode permettant de realiser le coup.
 	public void jouerCoup(Coup coup)
     {
-		getCase(coup.getIVide(), coup.getJVide()).setPleine(true);
-		getCase((coup.getIVide()+coup.getIPleine())/2, (coup.getJVide()+coup.getJPleine())/2).setPleine(false);
-		getCase(coup.getIPleine(), coup.getJPleine()).setPleine(false);
+        if(canPlayCoup(coup))
+		{
+			getCase(coup.getIVide(), coup.getJVide()).setPleine(true);
+			getCase((coup.getIVide()+coup.getIPleine())/2, (coup.getJVide()+coup.getJPleine())/2).setPleine(false);
+			getCase(coup.getIPleine(), coup.getJPleine()).setPleine(false);
+		}
+		else
+        {
+            System.out.println("Coup illegal !");
+        }
 	}
 
     public void jouerChemin(Chemin chemin)
@@ -208,7 +220,8 @@ public class Solitaire
     }
 
 	//Methode permettant de realiser le coup inverse.
-	public void jouerCoupInverse(Coup coup){
+	public void jouerCoupInverse(Coup coup)
+	{
 		getCase(coup.getIVide(), coup.getJVide()).setPleine(false);
 		getCase((coup.getIVide()+coup.getIPleine())/2, (coup.getJVide()+coup.getJPleine())/2).setPleine(true);
 		getCase(coup.getIPleine(), coup.getJPleine()).setPleine(true);

@@ -28,71 +28,109 @@ public class SolverMonteCarlo extends Solver
 
     public Chemin doSolve(Solitaire solitaire)
     {
-        StateGraph graph = new StateGraph();
+        SolitaireState root = new SolitaireState();
+
+        Solitaire clone = new Solitaire(solitaire);
+        expandNode(clone, root);
+
         for(currentIteration = 0; currentIteration < iterations; ++currentIteration)
         {
-            StateChemin stateChemin = graph.chooseNodeToExpand();
-
-            Solitaire clone = new Solitaire(solitaire);
-            clone.jouerChemin(stateChemin.chemin);
-            List< Coup > coupsPossibles = getCoupsPossibles(clone);
-
-            Coup coupToChild = coupsPossibles.get((int)(Math.random() * coupsPossibles.size()));
-            SolitaireState newChild = new SolitaireState();
-            stateChemin.state.addEdge(new GraphEdge(coupToChild, newChild));
-
-            clone.jouerCoup(coupToChild);
-            Chemin cheminAleatoire = jouerCheminAleatoire(clone);
-
-            newChild.addScore(clone.getScore());
-
-            if(clone.getScore() < getMeilleurScore())
-            {
-                setMeilleurScore(clone.getScore());
-                Chemin meilleurChemin = new Chemin();
-                meilleurChemin.add(stateChemin.chemin);
-                meilleurChemin.add(coupToChild);
-                meilleurChemin.add(cheminAleatoire);
-                setMeilleurChemin(meilleurChemin);
-            }
-
+            SolitaireState state = chooseNodeToExpand(root);
+            expandNode(clone, state);
         }
 
         return getMeilleurChemin();
     }
 
-    private Chemin jouerCheminAleatoire(Solitaire clone)
+    public void expandNode(Solitaire solitaire, SolitaireState state)
     {
-        Chemin result = new Chemin();
-        List< Coup > coupsPossibles = getCoupsPossibles(clone);
+        solitaire.jouerChemin(state.chemin);
+        List<Coup> coupsPossibles = getCoupsPossibles(solitaire);
+
+        for (Coup coup : coupsPossibles)
+        {
+            SolitaireState newChild = new SolitaireState();
+            state.addEdge(new GraphEdge(coup, newChild));
+            solitaire.jouerCoup(coup);
+            runSimulationFromState(solitaire, newChild);
+            solitaire.jouerCoupInverse(coup);
+        }
+
+        solitaire.jouerCheminInverse(state.chemin);
+    }
+
+    private void runSimulationFromState(Solitaire solitaire, SolitaireState state)
+    {
+        int scoreInitial = solitaire.getScore();
+        Chemin cheminAleatoire = new Chemin();
+        List< Coup > coupsPossibles = getCoupsPossibles(solitaire);
 
         while(coupsPossibles.size() > 0)
         {
             Coup coup = coupsPossibles.get((int)(Math.random() * coupsPossibles.size()));
-            result.add(coup);
-            clone.jouerCoup(coup);
-            coupsPossibles = getCoupsPossibles(clone);
+            cheminAleatoire.add(coup);
+            solitaire.jouerCoup(coup);
+            coupsPossibles = getCoupsPossibles(solitaire);
         }
 
-        return result;
+        state.addScore(scoreInitial - solitaire.getScore());
+
+        if(solitaire.getScore() < getMeilleurScore())
+        {
+            setMeilleurScore(solitaire.getScore());
+            Chemin meilleurChemin = new Chemin();
+            meilleurChemin.add(state.chemin);
+            meilleurChemin.add(cheminAleatoire);
+            setMeilleurChemin(meilleurChemin);
+        }
+
+        solitaire.jouerCheminInverse(cheminAleatoire);
+    }
+
+    public SolitaireState chooseNodeToExpand(SolitaireState root)
+    {
+        SolitaireState currentState = root;
+        while(!currentState.isLeaf())
+        {
+            double currentMax = 0;
+            SolitaireState currentBest = null;
+            for(SolitaireState childState : currentState.getNextStates())
+            {
+                double averageScore = childState.averageScore();
+                if(averageScore > currentMax)
+                {
+                    currentMax = averageScore;
+                    currentBest = childState;
+                }
+            }
+
+            currentState = currentBest;
+        }
+
+        return currentState;
     }
 
 
     private class SolitaireState
     {
-        public List< Integer > obtainedScores;
+        public int nbScores;
+        public int scoreSum;
         public List< GraphEdge > edges;
         public SolitaireState parent;
+        public Chemin chemin;
 
         public SolitaireState()
         {
-            this.obtainedScores = new ArrayList<>();
+            this.nbScores = 0;
+            this.scoreSum = 0;
             this.edges = new ArrayList<>();
+            this.chemin = new Chemin();
         }
 
         public void addScore(int score)
         {
-            obtainedScores.add(score);
+            scoreSum += score;
+            nbScores++;
 
             if(parent != null)
             {
@@ -102,20 +140,15 @@ public class SolverMonteCarlo extends Solver
 
         public double averageScore()
         {
-            double result = 0;
-
-            for(Integer score : obtainedScores)
-            {
-                result += score / obtainedScores.size();
-            }
-
-            return result;
+            return (double)scoreSum / (double)nbScores;
         }
 
         public void addEdge(GraphEdge edge)
         {
             edges.add(edge);
             edge.endState.parent = this;
+            edge.endState.chemin = new Chemin(chemin);
+            edge.endState.chemin.add(edge.coup);
         }
 
         public List< SolitaireState > getNextStates()
@@ -148,39 +181,4 @@ public class SolverMonteCarlo extends Solver
             this.endState = endState;
         }
     }
-
-    private class StateChemin
-    {
-        public SolitaireState state;
-        public Chemin chemin;
-
-        public StateChemin(SolitaireState state, Chemin chemin) {
-            this.state = state;
-            this.chemin = chemin;
-        }
-    }
-
-    private class StateGraph
-    {
-        public SolitaireState root;
-
-        public StateGraph()
-        {
-            this.root = new SolitaireState();
-        }
-
-        public StateChemin chooseNodeToExpand()
-        {
-            SolitaireState currentState = root;
-            Chemin chemin = new Chemin();
-            while(!currentState.isLeaf())
-            {
-                chemin.add(currentState.edges.get(0).coup);
-                currentState = currentState.getNextStates().get(0);
-            }
-
-            return new StateChemin(currentState, chemin);
-        }
-    }
-
 }
